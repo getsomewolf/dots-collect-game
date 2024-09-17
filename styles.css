@@ -150,7 +150,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.9);
     padding: 30px;
     border-radius: 20px;
     text-align: center;
@@ -158,6 +158,22 @@ body {
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
     border: 2px solid #00FF00;
     display: none;
+    max-width: 80%;
+    max-height: 80vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #00FF00 rgba(0, 0, 0, 0.5);
+}
+#placar::-webkit-scrollbar {
+    width: 10px;
+}
+#placar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+}
+#placar::-webkit-scrollbar-thumb {
+    background-color: #00FF00;
+    border-radius: 5px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
 }
 #placar h2 {
     font-size: 36px;
@@ -165,14 +181,40 @@ body {
     margin-bottom: 20px;
     text-shadow: 0 0 10px #00FF00;
 }
-#placar ul {
-    list-style-type: none;
-    padding: 0;
+#ranking {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
-#placar li {
-    font-size: 24px;
+#ranking th, #ranking td {
+    padding: 10px;
+    border: 1px solid #00FF00;
     color: #FFFFFF;
-    margin-bottom: 10px;
+}
+#ranking th {
+    background-color: rgba(0, 255, 0, 0.2);
+    font-weight: bold;
+}
+#ranking tr:nth-child(even) {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+#ranking tr:hover {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+#voltarButton {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 24px;
+    background-color: #00FF00;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+#voltarButton:hover {
+    background-color: #00CC00;
+    transform: scale(1.1);
 }
 #lives {
     position: fixed;
