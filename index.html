@@ -102,6 +102,10 @@
             font-size: 24px;
             color: #FFFFFF;
             z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
         #score {
             top: 10px;
@@ -118,6 +122,7 @@
             width: 100%;
             height: 100%;
             z-index: -2;
+            transition: background-color 1s ease;
         }
         #menu {
             position: fixed;
@@ -207,6 +212,22 @@
         .heart-loss {
             animation: heartLoss 0.5s forwards;
         }
+        @keyframes scoreUpdate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .score-update {
+            animation: scoreUpdate 0.3s ease;
+        }
+        @keyframes levelUp {
+            0% { transform: scale(1); color: #FFFFFF; }
+            50% { transform: scale(1.3); color: #FFD700; }
+            100% { transform: scale(1); color: #FFFFFF; }
+        }
+        .level-up {
+            animation: levelUp 0.5s ease;
+        }
     </style>
 </head>
 <body class="bg-efeito min-h-screen text-white">
@@ -251,6 +272,7 @@
         const ranking = document.getElementById('ranking');
         const voltarButton = document.getElementById('voltarButton');
         const livesElement = document.getElementById('lives');
+        const bgCanvas = document.getElementById('bg-canvas');
         let score = 0;
         let level = 1;
         let gameRunning = false;
@@ -294,12 +316,23 @@
 
         function updateScore() {
             scoreElement.textContent = `Pontuação: ${score}`;
+            scoreElement.classList.add('score-update');
+            setTimeout(() => scoreElement.classList.remove('score-update'), 300);
+            
             const newLevel = Math.floor(score / 10) + 1;
             if (newLevel > level) {
                 level = newLevel;
                 levelUpSound.play();
+                levelElement.classList.add('level-up');
+                setTimeout(() => levelElement.classList.remove('level-up'), 500);
             }
             levelElement.textContent = `Nível: ${level}`;
+
+            // Atualiza a ambientação baseada na pontuação
+            const maxDarkness = 0.7; // Valor máximo de escurecimento
+            const darknessLevel = Math.min(score / 100, maxDarkness); // Aumenta gradualmente até o máximo
+            const backgroundColor = `rgba(0, 0, 0, ${darknessLevel})`;
+            bgCanvas.style.backgroundColor = backgroundColor;
         }
 
         function resetGame() {
@@ -317,6 +350,7 @@
             }
             gameSoundtrack.currentTime = 0;
             gameSoundtrack.play();
+            bgCanvas.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Reseta o fundo para transparente
         }
 
         function updateLives() {
