@@ -10,6 +10,7 @@ Dot Catcher é um jogo de ação rápida onde você controla um jogador que deve
 - Sistema de níveis progressivos
 - Efeitos visuais e sonoros
 - Placar de melhores pontuações
+- Partículas de fundo interativas
 
 ## Como jogar
 1. Clique em "Iniciar" para começar o jogo
@@ -22,7 +23,15 @@ Dot Catcher é um jogo de ação rápida onde você controla um jogador que deve
 - HTML5
 - CSS3
 - JavaScript
-- Canvas para animações de fundo
+- Canvas para animações de fundo e partículas
+- TailwindCSS para estilização
+- AOS (Animate On Scroll) para animações
+- TensorFlow.js para processamento de linguagem natural (não implementado ainda)
+
+## Estrutura do projeto
+- `index.html`: Arquivo principal do jogo
+- `styles.css`: Estilos personalizados
+- `script.js`: Lógica do jogo
 
 ## Instalação
 Não é necessária instalação. Basta abrir o arquivo index.html em um navegador web moderno.
