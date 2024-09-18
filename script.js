@@ -11,6 +11,7 @@ const ranking = document.getElementById('ranking');
 const voltarButton = document.getElementById('voltarButton');
 const livesElement = document.getElementById('lives');
 const bgCanvas = document.getElementById('bg-canvas');
+const hintElement = document.getElementById('hint');
 let score = 0;
 let level = 0;
 let gameRunning = false;
@@ -38,6 +39,17 @@ gameSoundtrack.loop = true;
 gameSoundtrack.volume = 0.5; // Ajuste o volume conforme necessário
 // Nota: Esta é uma trilha sonora de exemplo. Certifique-se de que a URL está funcionando e é apropriada para o jogo.
 gameSoundtrack.loop = true;
+
+function showHint() {
+    hintElement.classList.remove('hidden');
+    hintElement.style.opacity = '1';
+    setTimeout(() => {
+        hintElement.style.opacity = '0';
+        setTimeout(() => {
+            hintElement.classList.add('hidden');
+        }, 500);
+    }, 1500);
+}
 
 function createGameObject(type) {
     const object = document.createElement('div');
@@ -87,15 +99,16 @@ function resetGame() {
     updateScore();
     updateLives();
     gameArea.innerHTML = '';
+    showHint();
+    gameSoundtrack.currentTime = 0;
+    gameSoundtrack.play();
+    bgCanvas.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Reseta o fundo para transparente
     for (let i = 0; i < 10; i++) {
         createSparkle();
     }
     for (let i = 0; i < 5; i++) {
         createBomb();
     }
-    gameSoundtrack.currentTime = 0;
-    gameSoundtrack.play();
-    bgCanvas.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Reseta o fundo para transparente
 }
 
 function updateLives() {
@@ -292,7 +305,9 @@ startButton.addEventListener('click', () => {
     gameRunning = true;
     menu.style.display = 'none';
     resetGame();
-    requestAnimationFrame(updateBombPositions);
+    setTimeout(() => {
+        requestAnimationFrame(updateBombPositions);
+    }, 1500);
     gameSoundtrack.play();
 });
 
@@ -300,8 +315,10 @@ restartButton.addEventListener('click', () => {
     gameRunning = true;
     menu.style.display = 'none';
     resetGame();
-    requestAnimationFrame(updateBombPositions);
     gameSoundtrack.play();
+    setTimeout(() => {
+        requestAnimationFrame(updateBombPositions);
+    }, 1500);
 });
 
 placarButton.addEventListener('click', () => {

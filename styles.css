@@ -27,6 +27,25 @@ body {
     overflow: hidden;
     cursor: none;
 }
+#hint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 24px;
+    text-align: center;
+    z-index: 1002;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+}
 #game-area {
     position: fixed;
     top: 0;
