@@ -6,20 +6,22 @@ Dot Catcher é um jogo de ação rápida onde você controla um jogador que deve
 "Sic Parvis Magna" (Grandeza a partir de pequenos começos) - Sir Francis Drake
 
 ## Características principais
-- Controle do jogador com o mouse 🖱️
+- Controle do jogador com o mouse (desktop) ou joystick virtual (mobile) 🖱️📱
 - Coleta de pontos brilhantes para aumentar a pontuação 🌟
 - Bombas que perseguem o jogador 💣
 - Sistema de níveis progressivos 🏆
 - Efeitos visuais e sonoros 🎵
 - Placar de melhores pontuações 📊
 - Partículas de fundo interativas 🎆
+- Suporte para dispositivos móveis com joystick virtual 📱
 
 ## Como jogar
 1. Clique em "Iniciar" para começar o jogo 🚀
-2. Mova o mouse para controlar o jogador 🏃
-3. Colete os pontos brilhantes para aumentar sua pontuação ✨
-4. Evite as bombas vermelhas 💣
-5. O jogo termina quando você perde todas as três vidas ❤️❤️❤️
+2. No desktop: Mova o mouse para controlar o jogador 🏃
+3. No mobile: Use o joystick virtual para controlar o jogador 👆
+4. Colete os pontos brilhantes para aumentar sua pontuação ✨
+5. Evite as bombas vermelhas 💣
+6. O jogo termina quando você perde todas as três vidas ❤️❤️❤️
 
 ## Tecnologias utilizadas
 - HTML5 📄
@@ -37,6 +39,9 @@ Dot Catcher é um jogo de ação rápida onde você controla um jogador que deve
 
 ## Instalação
 Não é necessária instalação. Basta abrir o arquivo index.html em um navegador web moderno. 🌐
+
+## Compatibilidade
+O jogo é compatível com dispositivos desktop e móveis. Em dispositivos móveis, um joystick virtual é exibido para controle do jogador. 📱💻
 
 ## Créditos
 Efeitos sonoros e música de fundo obtidos de fontes de áudio gratuitas. 🎵
