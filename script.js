@@ -32,13 +32,15 @@ const levelUpSound = new Audio('https://freesound.org/data/previews/320/320655_5
 const gameOverSound = new Audio('https://freesound.org/data/previews/76/76376_877451-lq.mp3');
 
 // Novo soundtrack open source
-// Adicionando uma nova trilha sonora para o jogo
-// Trilha sonora de aventura em 8-bit para o jogo
 const gameSoundtrack = new Audio('https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg');
 gameSoundtrack.loop = true;
-gameSoundtrack.volume = 0.5; // Ajuste o volume conforme necessário
-// Nota: Esta é uma trilha sonora de exemplo. Certifique-se de que a URL está funcionando e é apropriada para o jogo.
-gameSoundtrack.loop = true;
+gameSoundtrack.volume = 0.5;
+
+// Variáveis do joystick
+let joystickBase, joystickStick;
+let joystickActive = false;
+let joystickAngle = 0;
+let joystickStrength = 0;
 
 function showHint() {
     hintElement.classList.remove('hidden');
@@ -85,9 +87,8 @@ function updateScore() {
     }
     levelElement.textContent = `Nível: ${level}`;
 
-    // Atualiza a ambientação baseada na pontuação
-    const maxDarkness = 0.7; // Valor máximo de escurecimento
-    const darknessLevel = Math.min(score / 100, maxDarkness); // Aumenta gradualmente até o máximo
+    const maxDarkness = 0.7;
+    const darknessLevel = Math.min(score / 100, maxDarkness);
     const backgroundColor = `rgba(0, 0, 0, ${darknessLevel})`;
     bgCanvas.style.backgroundColor = backgroundColor;
 }
@@ -102,13 +103,14 @@ function resetGame() {
     showHint();
     gameSoundtrack.currentTime = 0;
     gameSoundtrack.play();
-    bgCanvas.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Reseta o fundo para transparente
+    bgCanvas.style.backgroundColor = 'rgba(0, 0, 0, 0)';
     for (let i = 0; i < 10; i++) {
         createSparkle();
     }
     for (let i = 0; i < 5; i++) {
         createBomb();
     }
+    requestAnimationFrame(gameLoop);
 }
 
 function updateLives() {
@@ -197,16 +199,14 @@ function updateBombPositions(currentTime) {
         const dy = mouseY - rect.top;
         const distance = Math.hypot(dx, dy);
 
-        // Aumenta significativamente a aceleração e velocidade máxima
-        const baseAcceleration = 1.2; // Dobrado
-        const accelerationIncrease = 0.6; // Dobrado
+        const baseAcceleration = 1.2;
+        const accelerationIncrease = 0.6;
         const acceleration = baseAcceleration + (level * accelerationIncrease);
         bomb.vx += (dx / distance) * acceleration;
         bomb.vy += (dy / distance) * acceleration;
 
-        // Aumenta a velocidade máxima
-        const baseMaxSpeed = 20; // Dobrado
-        const maxSpeedIncrease = 2; // Dobrado
+        const baseMaxSpeed = 20;
+        const maxSpeedIncrease = 2;
         const maxSpeed = baseMaxSpeed + (level * maxSpeedIncrease);
         const speed = Math.hypot(bomb.vx, bomb.vy);
         if (speed > maxSpeed) {
@@ -214,15 +214,12 @@ function updateBombPositions(currentTime) {
             bomb.vy = (bomb.vy / speed) * maxSpeed;
         }
 
-        // Adiciona um movimento aleatório mais pronunciado
         bomb.vx += (Math.random() - 0.5) * 1.5;
         bomb.vy += (Math.random() - 0.5) * 1.5;
 
-        // Atualiza a posição da bomba
         const newX = rect.left + bomb.vx;
         const newY = rect.top + bomb.vy;
 
-        // Verifica colisão com as bordas (agora com mais elasticidade)
         if (newX < 0 || newX > window.innerWidth - 20) bomb.vx *= -1;
         if (newY < 0 || newY > window.innerHeight - 20) bomb.vy *= -1;
 
@@ -245,14 +242,15 @@ function updateBombPositions(currentTime) {
 let trail = [];
 const trailLength = 10;
 
-document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+function updatePlayerPosition(x, y) {
+    const maxX = window.innerWidth - 30;
+    const maxY = window.innerHeight - 30;
+    x = Math.max(15, Math.min(x, maxX));
+    y = Math.max(15, Math.min(y, maxY));
 
-    player.style.left = `${mouseX - 15}px`;
-    player.style.top = `${mouseY - 15}px`;
+    player.style.left = `${x - 15}px`;
+    player.style.top = `${y - 15}px`;
 
-    // Adiciona novo elemento à trilha
     if (trail.length >= trailLength) {
         const oldTrail = trail.shift();
         gameArea.removeChild(oldTrail);
@@ -260,12 +258,11 @@ document.addEventListener('mousemove', (e) => {
 
     const trailElement = document.createElement('div');
     trailElement.classList.add('trail');
-    trailElement.style.left = `${mouseX}px`;
-    trailElement.style.top = `${mouseY}px`;
+    trailElement.style.left = `${x}px`;
+    trailElement.style.top = `${y}px`;
     gameArea.appendChild(trailElement);
     trail.push(trailElement);
 
-    // Atualiza opacidade da trilha
     trail.forEach((element, index) => {
         element.style.opacity = (index + 1) / trailLength;
     });
@@ -276,7 +273,7 @@ document.addEventListener('mousemove', (e) => {
 
     sparkles.forEach(sparkle => {
         const rect = sparkle.getBoundingClientRect();
-        const distance = Math.hypot(mouseX - rect.left, mouseY - rect.top);
+        const distance = Math.hypot(x - rect.left, y - rect.top);
 
         if (distance < 30) {
             collectSound.play();
@@ -288,26 +285,88 @@ document.addEventListener('mousemove', (e) => {
         }
     });
 
-    // Gera novos inimigos conforme avança de level
-    const bombCount = 5 + (level * 3); // Aumenta o número de bombas em 3x por nível
+    const bombCount = 5 + (level * 3);
     while (document.querySelectorAll('.bomb').length < bombCount) {
         createBomb();
     }
 
-    // Mantém um número fixo de sparkles
     const sparkleCount = 10;
     while (document.querySelectorAll('.sparkle').length < sparkleCount) {
         createSparkle();
     }
-});
+}
+
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+const mobile = isMobile();
+
+if (mobile) {
+    document.body.classList.add('mobile');
+    joystickBase = document.getElementById('joystick-base');
+    joystickStick = document.getElementById('joystick-stick');
+    joystickBase.style.display = 'block';
+    joystickBase.addEventListener('touchstart', handleStart);
+    joystickBase.addEventListener('touchmove', handleMove);
+    joystickBase.addEventListener('touchend', handleEnd);
+} else {
+    document.addEventListener('mousemove', (e) => {
+        updatePlayerPosition(e.clientX, e.clientY);
+    });
+}
+
+function handleStart(e) {
+    joystickActive = true;
+    handleMove(e);
+}
+
+function handleMove(e) {
+    if (!joystickActive) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = gameArea.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    
+    const centerX = joystickBase.offsetLeft + joystickBase.offsetWidth / 2;
+    const centerY = joystickBase.offsetTop + joystickBase.offsetHeight / 2;
+    const maxDistance = joystickBase.offsetWidth / 2;
+    
+    const dx = x - centerX;
+    const dy = y - centerY;
+    const distance = Math.min(maxDistance, Math.hypot(dx, dy));
+    const angle = Math.atan2(dy, dx);
+    
+    joystickStick.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+    
+    const playerX = x;
+    const playerY = y;
+    
+    updatePlayerPosition(playerX, playerY);
+}
+
+function handleEnd() {
+    joystickActive = false;
+    joystickStick.style.transform = 'translate(0, 0)';
+}
+
+function updatePlayerPositionLoop() {
+    if (joystickActive) {
+        const playerRect = player.getBoundingClientRect();
+        const x = playerRect.left + Math.cos(joystickAngle) * joystickStrength * 5;
+        const y = playerRect.top + Math.sin(joystickAngle) * joystickStrength * 5;
+        updatePlayerPosition(x, y);
+    }
+    requestAnimationFrame(updatePlayerPositionLoop);
+}
+
+updatePlayerPositionLoop();
 
 startButton.addEventListener('click', () => {
     gameRunning = true;
     menu.style.display = 'none';
     resetGame();
-    setTimeout(() => {
-        requestAnimationFrame(updateBombPositions);
-    }, 1500);
     gameSoundtrack.play();
 });
 
@@ -316,9 +375,6 @@ restartButton.addEventListener('click', () => {
     menu.style.display = 'none';
     resetGame();
     gameSoundtrack.play();
-    setTimeout(() => {
-        requestAnimationFrame(updateBombPositions);
-    }, 1500);
 });
 
 placarButton.addEventListener('click', () => {
@@ -359,7 +415,6 @@ function updateRanking() {
     });
 }
 
-// Background animado otimizado
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -412,7 +467,13 @@ canvas.addEventListener('mousemove', (e) => {
 
 drawParticles();
 
-// Adicione este evento para garantir que o áudio possa ser reproduzido
 document.addEventListener('click', () => {
     gameSoundtrack.play().catch(error => console.log("Erro ao reproduzir áudio:", error));
 }, { once: true });
+
+function gameLoop() {
+    if (!gameRunning) return;
+    
+    updateBombPositions(performance.now());
+    requestAnimationFrame(gameLoop);
+}
