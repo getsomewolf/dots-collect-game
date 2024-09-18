@@ -1,6 +1,3 @@
-// Scripts anteriores permanecem os mesmos
-
-// Novo script para o jogo
 const gameArea = document.getElementById('game-area');
 const player = document.getElementById('player');
 const scoreElement = document.getElementById('score');
@@ -15,7 +12,7 @@ const voltarButton = document.getElementById('voltarButton');
 const livesElement = document.getElementById('lives');
 const bgCanvas = document.getElementById('bg-canvas');
 let score = 0;
-let level = 1;
+let level = 0;
 let gameRunning = false;
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 if (highScores.length > 0 && typeof highScores[0] !== 'object') {
@@ -67,7 +64,7 @@ function updateScore() {
     scoreElement.classList.add('score-update');
     setTimeout(() => scoreElement.classList.remove('score-update'), 300);
 
-    const newLevel = Math.floor(score / 10) + 1;
+    const newLevel = Math.floor(score / 10);
     if (newLevel > level) {
         level = newLevel;
         levelUpSound.play();
@@ -85,7 +82,7 @@ function updateScore() {
 
 function resetGame() {
     score = 0;
-    level = 1;
+    level = 0;
     lives = 3;
     updateScore();
     updateLives();

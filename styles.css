@@ -16,10 +16,6 @@
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
-.chat-container {
-    height: 300px;
-    overflow-y: auto;
-}
 .transition-all {
     transition: all 0.3s ease;
 }
@@ -30,14 +26,6 @@ body {
     user-select: none;
     overflow: hidden;
     cursor: none;
-}
-.chat-option {
-    cursor: pointer;
-    padding: 5px 10px;
-    background-color: #4a5568;
-    border-radius: 15px;
-    margin: 5px;
-    display: inline-block;
 }
 #game-area {
     position: fixed;
