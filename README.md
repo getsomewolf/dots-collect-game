@@ -40,6 +40,7 @@ Não é necessária instalação. Basta abrir o arquivo index.html em um navegad
 
 ## Créditos
 Efeitos sonoros e música de fundo obtidos de fontes de áudio gratuitas. 🎵
-Auxílio de Cursor para a criação do jogo.
+
+Auxílio de Cursor para a criação do jogo. 🤖
 
 Divirta-se jogando Dot Catcher! 🎉🕹️
