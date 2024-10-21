@@ -18,7 +18,7 @@ let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 if (highScores.length > 0 && typeof highScores[0] !== 'object') {
     highScores = highScores.map(score => ({
         score: score,
-        date: 'N/A',
+        date: 'NADA',
         time: 'N/A'
     }));
 }
